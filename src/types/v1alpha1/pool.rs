@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use k8s_openapi::api::core::v1 as corev1;
 use kube::KubeSchema;
 use serde::{Deserialize, Serialize};
 
@@ -20,8 +19,10 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub struct Pool {
     pub name: String,
+    
     pub servers: u64,
+
     pub volumes_ser_server: u64,
-    pub volume_chain_template: corev1::PersistentVolumeClaim,
-    pub path: String,
+    // pub volume_chain_template: corev1::PersistentVolumeClaim,
+    // pub path: String,
 }

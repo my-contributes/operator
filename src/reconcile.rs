@@ -23,10 +23,10 @@ use std::time::Duration;
 #[derive(Snafu, Debug)]
 pub enum Error {
     #[snafu(transparent)]
-    CtxError { source: context::Error },
+    Context { source: context::Error },
 
     #[snafu(transparent)]
-    TypesError { source: types::error::Error },
+    Types { source: types::error::Error },
 }
 
 // todo
