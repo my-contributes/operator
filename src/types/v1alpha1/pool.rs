@@ -22,7 +22,7 @@ pub struct Pool {
     
     pub servers: u64,
 
-    pub volumes_ser_server: u64,
+    pub volumes_per_server: u64,
     // pub volume_chain_template: corev1::PersistentVolumeClaim,
     // pub path: String,
 }

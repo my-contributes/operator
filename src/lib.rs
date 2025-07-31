@@ -15,7 +15,7 @@
 #![allow(clippy::single_match)]
 
 use crate::context::Context;
-use crate::reconcile::{error_policy, reconcile};
+use crate::reconcile::{error_policy, reconcile_rustfs};
 use crate::types::v1alpha1::tenant::Tenant;
 use futures::StreamExt;
 use k8s_openapi::api::apps::v1 as appsv1;
@@ -66,7 +66,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
             Api::<appsv1::StatefulSet>::all(client.clone()),
             watcher::Config::default(),
         )
-        .run(reconcile, error_policy, Arc::new(context))
+        .run(reconcile_rustfs, error_policy, Arc::new(context))
         .for_each(|res| async move {
             match res {
                 Ok((tenant, _)) => info!("reconciled successful, object{:?}", tenant.name),
