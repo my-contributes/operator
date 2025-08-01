@@ -20,8 +20,9 @@ use crate::types::v1alpha1::tenant::Tenant;
 use futures::StreamExt;
 use k8s_openapi::api::apps::v1 as appsv1;
 use k8s_openapi::api::core::v1 as corev1;
+use k8s_openapi::api::rbac::v1 as rbacsv1;
+use kube::runtime::{watcher, Controller};
 use kube::CustomResourceExt;
-use kube::runtime::{Controller, watcher};
 use kube::{Api, Client};
 use std::pin::Pin;
 use std::sync::Arc;
@@ -69,6 +70,14 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         )
         .owns(
             Api::<appsv1::StatefulSet>::all(client.clone()),
+            watcher::Config::default(),
+        )
+        .owns(
+            Api::<rbacsv1::Role>::all(client.clone()),
+            watcher::Config::default(),
+        )
+        .owns(
+            Api::<rbacsv1::RoleBinding>::all(client.clone()),
             watcher::Config::default(),
         )
         .run(reconcile_rustfs, error_policy, Arc::new(context))

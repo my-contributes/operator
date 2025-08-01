@@ -37,23 +37,29 @@ pub enum Error {
 // 4. 创建statfulset
 pub async fn reconcile_rustfs(tenant: Arc<Tenant>, ctx: Arc<Context>) -> Result<Action, Error> {
     let ns = tenant.namespace()?;
-    let latest_tenant = ctx.get::<Tenant>(&tenant.name(), &ns).await?;
+    let mut latest_tenant = ctx.get::<Tenant>(&tenant.name(), &ns).await?;
 
     if latest_tenant.metadata.deletion_timestamp.is_some() {
         return Ok(Action::await_change());
     }
 
-    let (role, service_account) = (
-        ctx.apply(&latest_tenant.new_role(), &ns).await?,
-        ctx.apply(&latest_tenant.new_service_account(), &ns).await?,
-    );
-
-    let service_account = ctx
+    // roles
+    let role = ctx.apply(&latest_tenant.new_role(), &ns).await?;
+    let service_account = ctx.apply(&latest_tenant.new_service_account(), &ns).await?;
+    let role_binding = ctx
         .apply(
             &latest_tenant.new_role_binding(&service_account, &role),
             &ns,
         )
         .await?;
+
+    // services
+    let io_svc = ctx.apply(&latest_tenant.new_io_service(), &ns).await?;
+    let console_svc = ctx.apply(&latest_tenant.new_console_service(), &ns).await?;
+    let headless_svc = ctx
+        .apply(&latest_tenant.new_headless_service(), &ns)
+        .await?;
+
     Ok(Action::await_change())
 }
 

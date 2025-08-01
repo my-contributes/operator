@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use k8s_openapi::api::core::v1 as corev1;
 use kube::KubeSchema;
 use serde::{Deserialize, Serialize};
-
 #[derive(Deserialize, Serialize, Clone, Debug, KubeSchema)]
 #[serde(rename_all = "camelCase")]
 #[x_kube(validation = Rule::new("self.servers * self.volumesPerServer >= 4"))]
@@ -27,6 +27,10 @@ pub struct Pool {
 
     #[x_kube(validation = Rule::new("self > 0").message("volumesPerServer must be gather than 0"))]
     pub volumes_per_server: i32,
+
+    // #[
+    // x_kube(validation = Rule::new("self.spec.resources.requests > 0").message("volume claim template must specify resource storage request")
+    // )]
     // pub volume_chain_template: corev1::PersistentVolumeClaim,
     // pub path: String,
 }

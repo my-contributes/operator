@@ -20,7 +20,7 @@ use k8s_openapi::api::core::v1 as corev1;
 use k8s_openapi::api::rbac::v1 as rbacv1;
 use k8s_openapi::apimachinery::pkg::apis::meta::v1 as metav1;
 use k8s_openapi::apimachinery::pkg::util::intstr;
-use k8s_openapi::{Resource as _, schemars};
+use k8s_openapi::{schemars, Resource as _};
 use kube::{CustomResource, KubeSchema, Resource, ResourceExt};
 use serde::{Deserialize, Serialize};
 use snafu::OptionExt;
@@ -65,8 +65,8 @@ pub struct TenantSpec {
     // #[serde(default, skip_serializing_if = "Option::is_none")]
     // pub sub_path: Option<String>,
     //
-    // #[serde(default, skip_serializing_if = "Option::is_none")]
-    // pub request_auto_cert: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub request_auto_cert: Option<bool>,
     //
     // #[serde(default, skip_serializing_if = "Option::is_none")]
     // pub cert_expiry_alert_threshold: Option<i32>,
